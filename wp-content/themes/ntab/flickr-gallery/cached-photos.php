@@ -12,7 +12,7 @@ $year = @$_POST['year'] ?: '2017';
 
 // Get cached version if available and otherwise generate fresh
 $html = cacheGet('photos-' . $collectionId . '-' . $year);
-if (!$html || false) {
+if (!$html) {
   ob_start();
 
   require('fresh-photos.php');
