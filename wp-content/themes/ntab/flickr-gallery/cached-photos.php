@@ -31,11 +31,9 @@ function cacheHas ($path) {
   return $config['cache'] && file_exists(__DIR__ . '/z-' . $path . '.cache') && filemtime(__DIR__ . '/z-' . $path . '.cache') > time() - $config['cache'];
 }
 function cacheGet ($path) {
-  var_dump((cacheHas($path) ? 'hit' : 'miss') . $path);
   return cacheHas($path) ? file_get_contents(__DIR__ . '/z-' . $path . '.cache') : '';
 }
 function cacheSet ($path, $data) {
   global $config;
-  echo 'set cache ' . $path;
   return $config['cache'] ? file_put_contents(__DIR__ . '/z-' . $path . '.cache', $data) : 0;
 }
