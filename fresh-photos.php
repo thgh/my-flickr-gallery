@@ -1,4 +1,7 @@
 <?php
+
+require(__DIR__ . '/bootstrap.php');
+
 // Expects $config, $collectionId, $year and cache helper functions
 if (!isset($config) || !isset($collectionId) || !isset($year)) {
   exit('Cannot load fresh photos');
@@ -17,7 +20,7 @@ if (isset($baseCollection['collection'])) {
   $photosets = $baseCollection['set'];
 }
 foreach ($photosets as $photosetNumber => $photoset) {
-  if (strpos($photoset['title'], $year) === false) {
+  if (strpos($photoset['title'], strval($year)) === false) {
     continue;
   }
   $photos = getPhotoset($photoset['id'])['photoset']['photo'];
@@ -49,33 +52,4 @@ foreach ($photosets as $photosetNumber => $photoset) {
     </div>
   </div>
 <?php
-}
-// Flickr API helpers
-function getCollections () {
-  global $config;
-  $json = cacheGet('collections');
-  if (!$json) {
-    $json = file_get_contents('https://api.flickr.com/services/rest/?method=flickr.collections.getTree&user_id=' . $config['user_id'] . '&format=json&api_key=' . $config['api_key']);
-    cacheSet('collections', $json);
-  }
-  return json_decode(substr($json, 14, -1), true);
-}
-function getPhotoset ($set_id) {
-  global $config;
-  $json = cacheGet('photoset-' . $set_id);
-  if (!$json) {
-    $json = file_get_contents('https://api.flickr.com/services/rest/?method=flickr.photosets.getPhotos&user_id=' . $config['user_id'] . '&photoset_id=' . $set_id . '&format=json&api_key=' . $config['api_key']);
-    cacheSet('photoset-' . $set_id, $json);
-  }
-  return json_decode(substr($json, 14, -1), true);
-}
-// only for the date
-function getPhotosetInfo ($set_id) {
-  global $config;
-  $json = cacheGet('photosetinfo-' . $set_id);
-  if (!$json) {
-    $json = file_get_contents('https://api.flickr.com/services/rest/?method=flickr.photosets.getInfo&user_id=' . $config['user_id'] . '&photoset_id=' . $set_id . '&format=json&api_key=' . $config['api_key']);
-    cacheSet('photosetinfo-' . $set_id, $json);
-  }
-  return json_decode(substr($json, 14, -1), true);
 }
