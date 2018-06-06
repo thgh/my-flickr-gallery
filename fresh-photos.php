@@ -1,13 +1,10 @@
 <?php
-
 // Expects $config, $collectionId, $year and cache helper functions
 if (!isset($config) || !isset($collectionId) || !isset($year)) {
   exit('Cannot load fresh photos');
 }
-
 // Collection selection
 $baseCollection = getCollections()['collections']['collection'][$collectionId];
-
 // If the base collection has sub collections, join them together
 if (isset($baseCollection['collection'])) {
   $photosets = [];
@@ -19,7 +16,6 @@ if (isset($baseCollection['collection'])) {
 } else {
   $photosets = $baseCollection['set'];
 }
-
 foreach ($photosets as $photosetNumber => $photoset) {
   if (strpos($photoset['title'], $year) === false) {
     continue;
@@ -31,7 +27,7 @@ foreach ($photosets as $photosetNumber => $photoset) {
     <div class="row">
       <div class="col-12">
         <h2><?php echo $photoset['title']; ?></h2>
-        <h3><?php echo getPhotoset($photoset['id'])['photoset']['total']; ?> photos by Johan Vanbrabant / <?php echo gmdate("F Y", $timestamp); ?></h3>
+        <h3><?php echo getPhotoset($photoset['id'])['photoset']['total']; ?> photos / <?php echo gmdate("F Y", $timestamp); ?></h3>
         <a href="#btnalbum-<?php echo $photosetNumber; ?>" class="viewallphotosbtn">View all photos</a>
       </div>
     </div>
@@ -54,8 +50,6 @@ foreach ($photosets as $photosetNumber => $photoset) {
   </div>
 <?php
 }
-
-
 // Flickr API helpers
 function getCollections () {
   global $config;
